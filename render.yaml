@@ -24,7 +24,7 @@ services:
         value: info
       - key: DB_CONNECTION
         value: pgsql
-      - key: DATABASE_URL
+      - key: DB_URL
         fromDatabase:
           name: helix-crm-db
           property: connectionString
