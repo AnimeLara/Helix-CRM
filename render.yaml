@@ -17,7 +17,7 @@ services:
       - key: APP_KEY
         sync: false
       - key: APP_URL
-        sync: false
+        value: https://helix-crm.onrender.com
       - key: LOG_CHANNEL
         value: stderr
       - key: LOG_LEVEL
