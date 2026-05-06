@@ -8,19 +8,19 @@ class LeadFactory extends Factory
 {
     public function definition(): array
     {
-        $first = fake()->firstName();
-        $last = fake()->lastName();
+        $first = $this->faker->firstName();
+        $last = $this->faker->lastName();
 
         return [
             'name' => $first.' '.$last,
-            'email' => strtolower($first.'.'.$last).'@'.fake()->safeEmailDomain(),
-            'phone' => fake()->phoneNumber(),
-            'company' => fake()->company(),
-            'status' => fake()->randomElement(['new', 'contacted', 'qualified', 'lost']),
-            'source' => fake()->randomElement(['website', 'referral', 'campaign', 'linkedin', 'cold-call']),
-            'expected_value' => fake()->randomFloat(2, 2500, 75000),
-            'notes' => fake()->sentence(12),
-            'last_contacted_at' => fake()->optional()->dateTimeBetween('-21 days', 'now'),
+            'email' => strtolower($first.'.'.$last).'@'.$this->faker->safeEmailDomain(),
+            'phone' => $this->faker->phoneNumber(),
+            'company' => $this->faker->company(),
+            'status' => $this->faker->randomElement(['new', 'contacted', 'qualified', 'lost']),
+            'source' => $this->faker->randomElement(['website', 'referral', 'campaign', 'linkedin', 'cold-call']),
+            'expected_value' => $this->faker->randomFloat(2, 2500, 75000),
+            'notes' => $this->faker->sentence(12),
+            'last_contacted_at' => $this->faker->optional()->dateTimeBetween('-21 days', 'now'),
         ];
     }
 }

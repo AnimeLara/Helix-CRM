@@ -8,10 +8,10 @@ class TaskFactory extends Factory
 {
     public function definition(): array
     {
-        $status = fake()->randomElement(['pending', 'in_progress', 'completed']);
+        $status = $this->faker->randomElement(['pending', 'in_progress', 'completed']);
 
         return [
-            'title' => fake()->randomElement([
+            'title' => $this->faker->randomElement([
                 'Prepare proposal deck',
                 'Send follow-up email',
                 'Schedule renewal call',
@@ -19,11 +19,11 @@ class TaskFactory extends Factory
                 'Confirm legal approval',
                 'Update pipeline forecast',
             ]),
-            'description' => fake()->sentence(12),
-            'due_date' => fake()->dateTimeBetween('-3 days', '+18 days'),
+            'description' => $this->faker->sentence(12),
+            'due_date' => $this->faker->dateTimeBetween('-3 days', '+18 days'),
             'status' => $status,
-            'priority' => fake()->randomElement(['low', 'medium', 'high']),
-            'completed_at' => $status === 'completed' ? fake()->dateTimeBetween('-7 days', 'now') : null,
+            'priority' => $this->faker->randomElement(['low', 'medium', 'high']),
+            'completed_at' => $status === 'completed' ? $this->faker->dateTimeBetween('-7 days', 'now') : null,
         ];
     }
 }

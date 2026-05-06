@@ -13,18 +13,18 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'phone' => fake()->phoneNumber(),
-            'job_title' => fake()->randomElement(['Account Executive', 'Sales Manager', 'Growth Lead']),
-            'role' => fake()->randomElement(['admin', 'manager', 'sales']),
-            'theme' => fake()->randomElement(['light', 'dark']),
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'phone' => $this->faker->phoneNumber(),
+            'job_title' => $this->faker->randomElement(['Account Executive', 'Sales Manager', 'Growth Lead']),
+            'role' => $this->faker->randomElement(['admin', 'manager', 'sales']),
+            'theme' => $this->faker->randomElement(['light', 'dark']),
             'notification_preferences' => [
-                'email_updates' => fake()->boolean(85),
-                'deal_alerts' => fake()->boolean(70),
+                'email_updates' => $this->faker->boolean(85),
+                'deal_alerts' => $this->faker->boolean(70),
                 'weekly_summary' => true,
             ],
-            'avatar_color' => fake()->randomElement(['emerald', 'sky', 'amber', 'rose']),
+            'avatar_color' => $this->faker->randomElement(['emerald', 'sky', 'amber', 'rose']),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),

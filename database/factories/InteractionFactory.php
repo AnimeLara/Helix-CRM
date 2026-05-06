@@ -9,9 +9,9 @@ class InteractionFactory extends Factory
     public function definition(): array
     {
         return [
-            'type' => fake()->randomElement(['call', 'email', 'meeting', 'note']),
-            'summary' => fake()->sentence(10),
-            'happened_at' => fake()->dateTimeBetween('-45 days', 'now'),
+            'type' => $this->faker->randomElement(['call', 'email', 'meeting', 'note']),
+            'summary' => $this->faker->sentence(10),
+            'happened_at' => $this->faker->dateTimeBetween('-45 days', 'now'),
         ];
     }
 }
