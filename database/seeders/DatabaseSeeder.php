@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,61 +21,89 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $users = collect([
-            User::factory()->create([
-                'name' => 'Olivia Hart',
+            User::query()->updateOrCreate([
                 'email' => 'admin@crm.test',
+            ], [
+                'name' => 'Olivia Hart',
+                'password' => 'password',
                 'role' => 'admin',
                 'job_title' => 'CRM Administrator',
                 'phone' => '+1 415 555 0101',
                 'theme' => 'dark',
                 'avatar_color' => 'emerald',
+                'email_verified_at' => now(),
+                'remember_token' => Str::random(10),
             ]),
-            User::factory()->create([
-                'name' => 'Marcus Lee',
+            User::query()->updateOrCreate([
                 'email' => 'manager@crm.test',
+            ], [
+                'name' => 'Marcus Lee',
+                'password' => 'password',
                 'role' => 'manager',
                 'job_title' => 'Sales Manager',
                 'phone' => '+1 415 555 0102',
                 'avatar_color' => 'amber',
+                'email_verified_at' => now(),
+                'remember_token' => Str::random(10),
             ]),
-            User::factory()->create([
-                'name' => 'Sofia Patel',
+            User::query()->updateOrCreate([
                 'email' => 'sales@crm.test',
+            ], [
+                'name' => 'Sofia Patel',
+                'password' => 'password',
                 'role' => 'sales',
                 'job_title' => 'Account Executive',
                 'phone' => '+1 415 555 0103',
                 'avatar_color' => 'sky',
+                'email_verified_at' => now(),
+                'remember_token' => Str::random(10),
             ]),
         ]);
 
-        Lead::factory(24)->create([
-            'owner_id' => fn () => $users->random()->id,
-        ]);
+        if (Lead::count() < 20) {
+            Lead::factory(24 - Lead::count())->create([
+                'owner_id' => fn () => $users->random()->id,
+            ]);
+        }
 
-        $customers = Customer::factory(18)->create([
-            'owner_id' => fn () => $users->random()->id,
-        ]);
+        if (Customer::count() < 15) {
+            Customer::factory(18 - Customer::count())->create([
+                'owner_id' => fn () => $users->random()->id,
+            ]);
+        }
+
+        $customers = Customer::all();
 
         $customers->each(function (Customer $customer) use ($users): void {
-            Interaction::factory(random_int(2, 4))->create([
-                'customer_id' => $customer->id,
-                'user_id' => $users->random()->id,
-            ]);
+            if ($customer->interactions()->count() === 0) {
+                Interaction::factory(random_int(2, 4))->create([
+                    'customer_id' => $customer->id,
+                    'user_id' => $users->random()->id,
+                ]);
+            }
         });
 
-        $deals = Deal::factory(14)->create([
-            'customer_id' => fn () => $customers->random()->id,
-            'lead_id' => fn () => Lead::query()->inRandomOrder()->value('id'),
-            'owner_id' => fn () => $users->random()->id,
-        ]);
+        if (Deal::count() < 10) {
+            Deal::factory(14 - Deal::count())->create([
+                'customer_id' => fn () => $customers->random()->id,
+                'lead_id' => fn () => Lead::query()->inRandomOrder()->value('id'),
+                'owner_id' => fn () => $users->random()->id,
+            ]);
+        }
 
-        Task::factory(12)->create([
-            'assigned_to' => fn () => $users->random()->id,
-            'customer_id' => fn () => $customers->random()->id,
-            'deal_id' => fn () => $deals->random()->id,
-        ]);
+        $deals = Deal::all();
 
-        $this->seedActivities($users, $customers, $deals);
+        if (Task::count() < 10) {
+            Task::factory(12 - Task::count())->create([
+                'assigned_to' => fn () => $users->random()->id,
+                'customer_id' => fn () => $customers->random()->id,
+                'deal_id' => fn () => $deals->random()->id,
+            ]);
+        }
+
+        if (Activity::count() === 0) {
+            $this->seedActivities($users, $customers, $deals);
+        }
     }
 
     protected function seedActivities(Collection $users, Collection $customers, Collection $deals): void
